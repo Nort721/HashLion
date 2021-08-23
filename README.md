@@ -10,8 +10,6 @@ copy the code and build it yourself by running
 in both cases you'll end up with an executable file that you can just double click to start
 
 ## Usage
-HashLion is extreme easy to use.
-
 ### Step 1 (providing a dictionary)
 After double clicking the file you'll get a command prompt window asking you to enter
 the path to your words file, the words list must be a .txt file
