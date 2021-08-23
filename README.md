@@ -102,5 +102,3 @@ you can also feel free to contirbute and help adding these
 
 - Add a config file where you can configure the input questions automatically instead of answering them everytime that you open the program
 
-- Add an option to make HashLion save the attack information into a text file if an attack is successful
-
