@@ -13,7 +13,7 @@ import (
 
 func main() {
 
-	const version string = "Build 1 Alpha"
+	const version string = "Build 2 Alpha"
 	const program_name string = "HashLion"
 
 	consoleutil.SetConsoleTitle(program_name + " " + version)
@@ -257,19 +257,35 @@ func attackQuick(lines []string, hashType string, target string) bool {
 
 // this will print out the finishing attack message
 func finishAttack(startDate time.Time, target string, line string, counter int) {
-	fmt.Println("Hash cracked successfully! " + target + " : " + line + " | " + strconv.Itoa(counter))
-	fmt.Println("Started cracking attempts at " + startDate.Format("01-02-2006 15:04:05"))
+	line1 := "Hash cracked successfully! " + target + " : " + line + " | " + strconv.Itoa(counter)
+	line2 := "Started cracking attempts at " + startDate.Format("01-02-2006 15:04:05")
 	finishDate := time.Now()
-	fmt.Println("Finished cracking at " + finishDate.Format("01-02-2006 15:04:05"))
-	fmt.Println("Time took to crack: " + timeutil.GetTimeBetweenDates(finishDate, startDate))
+	line3 := "Finished cracking at " + finishDate.Format("01-02-2006 15:04:05")
+	line4 := "Time took to crack: " + timeutil.GetTimeBetweenDates(finishDate, startDate)
+
+	text := []string{line1, line2, line3, line4}
+
+	for _, line := range text {
+		fmt.Println(line)
+	}
 	fmt.Println()
+
+	fileutil.WriteFile("hashlion_log", text)
 }
 
 // this will print out the finishing attack message
 func finishAttackQuick(startDate time.Time, target string, line string) {
-	fmt.Println("Hash cracked successfully! " + target + " : " + line)
+	line1 := "Hash cracked successfully! " + target + " : " + line
 	finishDate := time.Now()
-	fmt.Println("Finished cracking at " + finishDate.Format("01-02-2006 15:04:05"))
-	fmt.Println("Time took to crack: " + timeutil.GetTimeBetweenDates(finishDate, startDate))
+	line2 := "Finished cracking at " + finishDate.Format("01-02-2006 15:04:05")
+	line3 := "Time took to crack: " + timeutil.GetTimeBetweenDates(finishDate, startDate)
+
+	text := []string{line1, line2, line3}
+
+	for _, line := range text {
+		fmt.Println(line)
+	}
 	fmt.Println()
+
+	fileutil.WriteFile("hashlion_log", text)
 }
