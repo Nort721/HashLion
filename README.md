@@ -24,8 +24,13 @@ https://github.com/praetorian-inc/Hob0Rules/tree/master/wordlists
 I personally recommend using an updated version of the RockYou list:
 https://github.com/ohmybahgosh/RockYou2021.txt
 
+<details>
+  <summary>picture</summary>
+  
 ![step1](https://user-images.githubusercontent.com/24839815/130453626-92c4e318-3856-483e-a2d7-2f28a75e0074.PNG)
-
+  
+</details>
+  
 ### Step 2 (choosing a hash type)
 After providing a dictionary you need to choose the type
 of hash algorithm that your password target was hashed with
@@ -38,7 +43,12 @@ HashLion supports following hash types for recovery:
 Any other hashes are not supported and won't allow you
 to move to the next step
 
+<details>
+  <summary>picture</summary>
+  
 ![Step2](https://user-images.githubusercontent.com/24839815/130454253-f255366b-7532-45fa-ab8d-6e538afef415.PNG)
+  
+</details>
 
 ### Step 3 (input target & attack)
 Its time to provide our tagret and start the attack
