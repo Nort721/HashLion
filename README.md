@@ -1,12 +1,11 @@
+![title3](https://user-images.githubusercontent.com/24839815/130515256-f7fbebf9-f214-42f3-9cda-856458787f48.PNG)
+
 # HashLion
 HashLion is a basic (currently basic) password recovery utility coded in Go
 
 ## Installation
-HashLion is exremely easy to install, you can download the latest release or
-copy the code and build it yourself by running
-
-```go build <hashlion.go>```
-
+HashLion is exremely easy to install, you can download the latest release or clone the
+repository and open it in vscode, then run in the vscode terminal the ```go build``` command, 
 in both cases you'll end up with an executable file that you can just double click to start
 
 ## Usage
