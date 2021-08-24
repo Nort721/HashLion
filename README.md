@@ -56,7 +56,7 @@ we simple copy-paste our hash to the program.
 After pressing enter HashLion will ask you if you want
 want get live information output of the attack, while seeing
 the live information looks impressive and cool, I recommend
-to choose the "hide" always as its WAY faster since HashLion
+to choose the "hide" option as its WAY faster since HashLion
 can focus on only preforming instructions that are related to
 the attack itself
 
