@@ -6,6 +6,8 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/hex"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // generates the sha1 hash of a given string
@@ -36,4 +38,10 @@ func GenerateSha512(text string) string {
 func GenerateMD5(text string) string {
 	hash := md5.Sum([]byte(text))
 	return hex.EncodeToString(hash[:])
+}
+
+// generates the bcrypt hash of a given string
+func GenerateBcrypt(password string) string {
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), 1)
+	return string(bytes)
 }

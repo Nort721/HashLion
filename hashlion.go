@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	command "hashlion/utils"
 	consoleutil "hashlion/utils"
 	fileutil "hashlion/utils"
 	hashutil "hashlion/utils"
@@ -11,105 +12,55 @@ import (
 	"time"
 )
 
+var lines []string
+var Running bool = true
+
 func main() {
+
+	// logs
+	// fixed os.open issue when copy-pasting file locations on unix based systems
+	// added bcrypt
+
+	str := hashutil.GenerateBcrypt("test")
+	fmt.Println(str)
 
 	const version string = "Build 2 Alpha"
 	const program_name string = "HashLion"
 
-	consoleutil.SetConsoleTitle(program_name + " " + version)
+	//consoleutil.SetConsoleTitle(program_name + " " + version)
 	fmt.Println("===================================")
 	fmt.Println(program_name + " " + version + ", By Nort721")
 	fmt.Println("===================================")
-	fmt.Println("")
 
-	fmt.Print("enter word list path(.txt): ")
-	input := consoleutil.ScanInput()
+	commands := make(map[string]command.Command)
 
-	// if the user didn't write .txt at the end, we will just add it our self
-	if !strings.Contains(input, ".txt") {
-		input += ".txt"
-	}
+	commands["help"] = command.CommandHelp{}
+	commands["exit"] = command.CommandExit{}
+	commands["attack"] = command.CommandAttack{}
 
-	// read words file
-	fmt.Println("loading file . . .")
-	fmt.Println()
-	var lines []string = fileutil.ScanFile(input)
+	var input string
 
-	// main(input) loop variables
-	var running bool = true
+	for Running {
 
-	var hashType string
+		fmt.Print("input -> ")
 
-	for running {
-		// get the hash type
-		fmt.Print("enter hash type(sha1/sha256/sha512/md5): ")
 		input = consoleutil.ScanInput()
-		hashType = input
 
-		if input == "exit" {
-			running = false
-		}
+		args := strings.Split(input, " ")
 
-		if input != "sha1" && input != "sha256" && input != "sha512" && input != "md5" {
-			fmt.Println("error -> bad syntax, args:{sha1,sha256,sha512,md5}")
+		cmd, ok := commands[args[0]]
+
+		if ok {
+			command.Run_Command(cmd, args)
 		} else {
-			break
-		}
-	}
-
-	// input loop
-	for running {
-
-		// get the target
-		fmt.Print("enter target hash: ")
-
-		input = consoleutil.ScanInput()
-
-		if input == "exit" {
-			running = false
-			continue
+			consoleutil.PrintMsg("Unknown command. Type help for help.\n")
 		}
 
-		// the target hash
-		target := input
-
-		// ask if to show attack live info
-		fmt.Println("Tip! attack is quicker on hide mode")
-		fmt.Print("show attack live info?(show/hide): ")
-
-		input = consoleutil.ScanInput()
-
-		if input == "exit" {
-			running = false
-			continue
-		}
-
-		// if no input, choose hide by default as its the fastest
-		if len(input) == 0 {
-			//fmt.Print("hide")
-			input = "hide"
-		}
-
-		var cracked bool = false
-
-		fmt.Println()
-		if input == "show" {
-			cracked = attackAndShow(lines, hashType, target)
-		} else if input == "hide" {
-			cracked = attackQuick(lines, hashType, target)
-		} else {
-			fmt.Println("error -> bad syntax, args:{show,hide}")
-			continue
-		}
-
-		if !cracked {
-			fmt.Println("Failed to crack, reason: hash was not in dictionary")
-		}
 	}
 }
 
 // attacks the given target and provides live info of the attack
-func attackAndShow(lines []string, hashType string, target string) bool {
+func AttackAndShow(hashType string, target string) bool {
 	startDate := time.Now()
 	fmt.Println("Starting cracking attempts at " + startDate.Format("01-02-2006 15:04:05"))
 
@@ -129,7 +80,6 @@ func attackAndShow(lines []string, hashType string, target string) bool {
 			testHash = hashutil.GenerateSha1(line)
 
 			fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
-			//fmt.Println("trying -> " + testHash + " : " + line + " | " + strconv.Itoa(counter))
 
 			if testHash == target {
 				finishAttack(startDate, target, line, counter)
@@ -177,6 +127,22 @@ func attackAndShow(lines []string, hashType string, target string) bool {
 			counter++
 
 			testHash = hashutil.GenerateMD5(line)
+
+			fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
+
+			if testHash == target {
+				finishAttack(startDate, target, line, counter)
+				return true
+			}
+		}
+
+	} else if hashType == "bcrypt" {
+
+		for _, line := range lines {
+
+			counter++
+
+			testHash = hashutil.GenerateBcrypt(line)
 
 			fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
 
@@ -243,6 +209,18 @@ func attackQuick(lines []string, hashType string, target string) bool {
 		for _, line := range lines {
 
 			testHash = hashutil.GenerateMD5(line)
+
+			if testHash == target {
+				finishAttackQuick(startDate, target, line)
+				return true
+			}
+		}
+
+	} else if hashType == "bcrypt" {
+
+		for _, line := range lines {
+
+			testHash = hashutil.GenerateBcrypt(line)
 
 			if testHash == target {
 				finishAttackQuick(startDate, target, line)
