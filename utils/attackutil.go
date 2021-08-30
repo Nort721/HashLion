@@ -19,10 +19,8 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 	var testHash string
 
 	// read words file
-	if len(lines) == 0 {
-		PrintMsg("loading words file . . .\n")
-		lines = ScanFile(wordListPath)
-	}
+	PrintMsg("loading words file . . .\n")
+	lines = ScanFile(wordListPath)
 
 	cracked := false
 
