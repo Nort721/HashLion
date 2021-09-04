@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	generator "hashlion/types"
 	"strconv"
 	"time"
 )
@@ -10,9 +11,15 @@ var lines []string
 
 func AttackDictionary(hashalgo string, target string, wordListPath string, print bool, layers int) {
 
+	hashes := make(map[string]generator.Generator)
+
+	hashes["sha1"] = generator.HashSha1{}
+	hashes["sha256"] = generator.HashSha256{}
+	hashes["sha512"] = generator.HashSha512{}
+	hashes["md5"] = generator.HashMd5{}
+	hashes["bcrypt"] = generator.HashBcrypt{}
+
 	fmt.Println()
-	startDate := time.Now()
-	fmt.Println("Starting cracking attempts at " + startDate.Format("01-02-2006 15:04:05"))
 
 	var counter int = 0
 
@@ -24,106 +31,26 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 
 	cracked := false
 
-	PrintMsg("starting attack . . .\n")
+	startDate := time.Now()
+	fmt.Println("Starting cracking attempts at " + startDate.Format("01-02-2006 15:04:05"))
 
-	// the hash check is intentionally here instead of having it inside a central
-	// having function so we can check the hash here once outside of the attack loop
-	// making the attack faster
-	if hashalgo == "sha1" {
+	for _, line := range lines {
 
-		for _, line := range lines {
+		counter++
 
-			counter++
+		gen := hashes[hashalgo]
 
-			testHash = GenerateSha1(line)
+		testHash = generator.Run_Hash(gen, line)
 
-			if print {
-				fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
-			}
-
-			if testHash == target {
-				finishAttack(startDate, target, line, counter)
-				cracked = true
-				break
-			}
+		if print {
+			fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
 		}
 
-	} else if hashalgo == "sha256" {
-
-		for _, line := range lines {
-
-			counter++
-
-			testHash = GenerateSha256(line)
-
-			if print {
-				fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
-			}
-
-			if testHash == target {
-				finishAttack(startDate, target, line, counter)
-				cracked = true
-				break
-			}
+		if testHash == target {
+			finishAttack(startDate, target, line, counter)
+			cracked = true
+			break
 		}
-
-	} else if hashalgo == "sha512" {
-
-		for _, line := range lines {
-
-			counter++
-
-			testHash = GenerateSha512(line)
-
-			if print {
-				fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
-			}
-
-			if testHash == target {
-				finishAttack(startDate, target, line, counter)
-				cracked = true
-				break
-			}
-		}
-
-	} else if hashalgo == "md5" {
-
-		for _, line := range lines {
-
-			counter++
-
-			testHash = GenerateMD5(line)
-
-			if print {
-				fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
-			}
-
-			if testHash == target {
-				finishAttack(startDate, target, line, counter)
-				cracked = true
-				break
-			}
-		}
-
-	} else if hashalgo == "bcrypt" {
-
-		for _, line := range lines {
-
-			counter++
-
-			testHash = GenerateBcrypt(line)
-
-			if print {
-				fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
-			}
-
-			if testHash == target {
-				finishAttack(startDate, target, line, counter)
-				cracked = true
-				break
-			}
-		}
-
 	}
 
 	if !cracked {

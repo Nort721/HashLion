@@ -1,6 +1,7 @@
 package utils
 
 import (
+	generator "hashlion/types"
 	"os"
 	"strconv"
 	"strings"
@@ -25,8 +26,8 @@ type CommandHelp struct{}
 func (c CommandHelp) OnCommand(args []string) {
 	PrintMsg(
 		"\n====================\n" +
-			" - attack/a -dictionary/d <wordlist> <hashalgo> <target> -print/p <layers(def:1)>\n" +
-			" - attack/a -brutefoce/b <format> <hashalgo> <target> -print/p <layers(def:1)>\n" +
+			" - crack/c -dictionary/d <wordlist> <hashalgo> <target> -print/p <layers(def:1)>\n" +
+			" - crack/c -brutefoce/b <format> <hashalgo> <target> -print/p <layers(def:1)>\n" +
 			" - attackssh/assh <wordlist> <host:port> -print/p\n" +
 			" - hash <hashalgo> <string>\n" +
 			" - exit\n" +
@@ -163,7 +164,7 @@ func (c CommandHash) OnCommand(args []string) {
 
 		str := args[2]
 
-		PrintMsg("Hashed(" + str + "): " + GenerateHash(str, hashalgo) + "\n")
+		PrintMsg("Hashed(" + str + "): " + generator.GenerateHash(str, hashalgo) + "\n")
 	} else {
 		PrintMsg("Incorrect args length, Type help for help.\n")
 	}

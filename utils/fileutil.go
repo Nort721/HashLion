@@ -19,8 +19,10 @@ func ScanFile(path string) []string {
 		path = strings.Trim(path, "'")
 	}
 
+	// open the file
 	f, err := os.Open(path)
 
+	// error handling
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,6 +37,7 @@ func ScanFile(path string) []string {
 		lines = append(lines, scanner.Text())
 	}
 
+	// error handling
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}

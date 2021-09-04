@@ -26,8 +26,8 @@ func main() {
 	commands["help"] = command.CommandHelp{}
 	commands["exit"] = command.CommandExit{}
 
-	commands["attack"] = command.CommandAttack{}
-	commands["a"] = command.CommandAttack{}
+	commands["crack"] = command.CommandAttack{}
+	commands["c"] = command.CommandAttack{}
 
 	commands["attackssh"] = command.CommandAttackSSH{}
 	commands["assh"] = command.CommandAttackSSH{}
