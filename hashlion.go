@@ -2,290 +2,55 @@ package main
 
 import (
 	"fmt"
+	command "hashlion/utils"
 	consoleutil "hashlion/utils"
-	fileutil "hashlion/utils"
-	hashutil "hashlion/utils"
-	timeutil "hashlion/utils"
-	"strconv"
 	"strings"
-	"time"
 )
 
 func main() {
 
+	// logs
+	// fixed os.open issue when copy-pasting file locations on unix based systems
+	// added bcrypt
+
 	const version string = "Build 2 Alpha"
 	const program_name string = "HashLion"
 
-	consoleutil.SetConsoleTitle(program_name + " " + version)
+	//consoleutil.SetConsoleTitle(program_name + " " + version)
 	fmt.Println("===================================")
 	fmt.Println(program_name + " " + version + ", By Nort721")
 	fmt.Println("===================================")
-	fmt.Println("")
 
-	fmt.Print("enter word list path(.txt): ")
-	input := consoleutil.ScanInput()
+	commands := make(map[string]command.Command)
 
-	// if the user didn't write .txt at the end, we will just add it our self
-	if !strings.Contains(input, ".txt") {
-		input += ".txt"
-	}
+	commands["help"] = command.CommandHelp{}
+	commands["exit"] = command.CommandExit{}
 
-	// read words file
-	fmt.Println("loading file . . .")
-	fmt.Println()
-	var lines []string = fileutil.ScanFile(input)
+	commands["attack"] = command.CommandAttack{}
+	commands["a"] = command.CommandAttack{}
 
-	// main(input) loop variables
-	var running bool = true
+	commands["attackssh"] = command.CommandAttackSSH{}
+	commands["assh"] = command.CommandAttackSSH{}
 
-	var hashType string
+	commands["hash"] = command.CommandHash{}
 
-	for running {
-		// get the hash type
-		fmt.Print("enter hash type(sha1/sha256/sha512/md5): ")
+	var input string
+
+	for {
+
+		fmt.Print("input -> ")
+
 		input = consoleutil.ScanInput()
-		hashType = input
 
-		if input == "exit" {
-			running = false
-		}
+		args := strings.Split(input, " ")
 
-		if input != "sha1" && input != "sha256" && input != "sha512" && input != "md5" {
-			fmt.Println("error -> bad syntax, args:{sha1,sha256,sha512,md5}")
+		cmd, ok := commands[args[0]]
+
+		if ok {
+			command.Run_Command(cmd, args)
 		} else {
-			break
-		}
-	}
-
-	// input loop
-	for running {
-
-		// get the target
-		fmt.Print("enter target hash: ")
-
-		input = consoleutil.ScanInput()
-
-		if input == "exit" {
-			running = false
-			continue
-		}
-
-		// the target hash
-		target := input
-
-		// ask if to show attack live info
-		fmt.Println("Tip! attack is quicker on hide mode")
-		fmt.Print("show attack live info?(show/hide): ")
-
-		input = consoleutil.ScanInput()
-
-		if input == "exit" {
-			running = false
-			continue
-		}
-
-		// if no input, choose hide by default as its the fastest
-		if len(input) == 0 {
-			//fmt.Print("hide")
-			input = "hide"
-		}
-
-		var cracked bool = false
-
-		fmt.Println()
-		if input == "show" {
-			cracked = attackAndShow(lines, hashType, target)
-		} else if input == "hide" {
-			cracked = attackQuick(lines, hashType, target)
-		} else {
-			fmt.Println("error -> bad syntax, args:{show,hide}")
-			continue
-		}
-
-		if !cracked {
-			fmt.Println("Failed to crack, reason: hash was not in dictionary")
-		}
-	}
-}
-
-// attacks the given target and provides live info of the attack
-func attackAndShow(lines []string, hashType string, target string) bool {
-	startDate := time.Now()
-	fmt.Println("Starting cracking attempts at " + startDate.Format("01-02-2006 15:04:05"))
-
-	var counter int = 0
-
-	var testHash string
-
-	// the hash check is intentionally here instead of having it inside a central
-	// having function so we can check the hash here once outside of the attack loop
-	// making the attack faster
-	if hashType == "sha1" {
-
-		for _, line := range lines {
-
-			counter++
-
-			testHash = hashutil.GenerateSha1(line)
-
-			fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
-			//fmt.Println("trying -> " + testHash + " : " + line + " | " + strconv.Itoa(counter))
-
-			if testHash == target {
-				finishAttack(startDate, target, line, counter)
-				return true
-			}
-		}
-
-	} else if hashType == "sha256" {
-
-		for _, line := range lines {
-
-			counter++
-
-			testHash = hashutil.GenerateSha256(line)
-
-			fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
-			//fmt.Println("trying -> " + testHash + " : " + str + " | " + strconv.Itoa(counter))
-
-			if testHash == target {
-				finishAttack(startDate, target, line, counter)
-				return true
-			}
-		}
-
-	} else if hashType == "sha512" {
-
-		for _, line := range lines {
-
-			counter++
-
-			testHash = hashutil.GenerateSha512(line)
-
-			fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
-
-			if testHash == target {
-				finishAttack(startDate, target, line, counter)
-				return true
-			}
-		}
-
-	} else if hashType == "md5" {
-
-		for _, line := range lines {
-
-			counter++
-
-			testHash = hashutil.GenerateMD5(line)
-
-			fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
-
-			if testHash == target {
-				finishAttack(startDate, target, line, counter)
-				return true
-			}
+			consoleutil.PrintMsg("Unknown command. Type help for help.\n")
 		}
 
 	}
-
-	return false
-}
-
-// attacks the given hash target as fast as possible
-// giving up whatever is possible to speed up the attack
-func attackQuick(lines []string, hashType string, target string) bool {
-	startDate := time.Now()
-	fmt.Println("Starting cracking attempts at " + startDate.Format("01-02-2006 15:04:05"))
-
-	var testHash string
-
-	// the hash check is intentionally here instead of having it inside a central
-	// having function so we can check the hash here once outside of the attack loop
-	// making the attack faster
-	if hashType == "sha1" {
-
-		for _, line := range lines {
-
-			testHash = hashutil.GenerateSha1(line)
-
-			if testHash == target {
-				finishAttackQuick(startDate, target, line)
-				return true
-			}
-		}
-
-	} else if hashType == "sha256" {
-
-		for _, line := range lines {
-
-			testHash = hashutil.GenerateSha256(line)
-
-			if testHash == target {
-				finishAttackQuick(startDate, target, line)
-				return true
-			}
-		}
-
-	} else if hashType == "sha512" {
-
-		for _, line := range lines {
-
-			testHash = hashutil.GenerateSha512(line)
-
-			if testHash == target {
-				finishAttackQuick(startDate, target, line)
-				return true
-			}
-		}
-
-	} else if hashType == "md5" {
-
-		for _, line := range lines {
-
-			testHash = hashutil.GenerateMD5(line)
-
-			if testHash == target {
-				finishAttackQuick(startDate, target, line)
-				return true
-			}
-		}
-
-	}
-
-	return false
-}
-
-// this will print out the finishing attack message
-func finishAttack(startDate time.Time, target string, line string, counter int) {
-	line1 := "Hash cracked successfully! " + target + " : " + line + " | " + strconv.Itoa(counter)
-	line2 := "Started cracking attempts at " + startDate.Format("01-02-2006 15:04:05")
-	finishDate := time.Now()
-	line3 := "Finished cracking at " + finishDate.Format("01-02-2006 15:04:05")
-	line4 := "Time took to crack: " + timeutil.GetTimeBetweenDates(finishDate, startDate)
-
-	text := []string{line1, line2, line3, line4}
-
-	for _, line := range text {
-		fmt.Println(line)
-	}
-	fmt.Println()
-
-	fileutil.WriteFile("hashlion_log", text)
-}
-
-// this will print out the finishing attack message
-func finishAttackQuick(startDate time.Time, target string, line string) {
-	line1 := "Hash cracked successfully! " + target + " : " + line
-	finishDate := time.Now()
-	line2 := "Finished cracking at " + finishDate.Format("01-02-2006 15:04:05")
-	line3 := "Time took to crack: " + timeutil.GetTimeBetweenDates(finishDate, startDate)
-
-	text := []string{line1, line2, line3}
-
-	for _, line := range text {
-		fmt.Println(line)
-	}
-	fmt.Println()
-
-	fileutil.WriteFile("hashlion_log", text)
 }

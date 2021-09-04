@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -11,6 +12,13 @@ import (
 // and reads all the text in it, returns
 // a string slice with all the text from the file
 func ScanFile(path string) []string {
+
+	// support for unix systems
+	// unix systems paste file paths with apostrophe
+	if strings.Contains(path, "'") {
+		path = strings.Trim(path, "'")
+	}
+
 	f, err := os.Open(path)
 
 	if err != nil {
