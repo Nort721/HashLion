@@ -45,3 +45,19 @@ func GenerateBcrypt(password string) string {
 	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), 1)
 	return string(bytes)
 }
+
+func GenerateHash(str string, hashalgo string) string {
+	switch hashalgo {
+	case "sha1":
+		return GenerateSha1(str)
+	case "sha256":
+		return GenerateSha256(str)
+	case "sha512":
+		return GenerateSha512(str)
+	case "md5":
+		return GenerateMD5(str)
+	case "bcrypt":
+		return GenerateBcrypt(str)
+	}
+	return "err. hash algo doesn't exist"
+}

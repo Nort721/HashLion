@@ -24,6 +24,8 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 
 	cracked := false
 
+	PrintMsg("starting attack . . .\n")
+
 	// the hash check is intentionally here instead of having it inside a central
 	// having function so we can check the hash here once outside of the attack loop
 	// making the attack faster
@@ -125,7 +127,7 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 	}
 
 	if !cracked {
-		fmt.Println("Failed to crack, reason: hash was not in dictionary")
+		fmt.Println("Failed to crack, reason: hash was not in dictionary | " + strconv.Itoa(counter) + " size: " + strconv.Itoa(len(lines)))
 	}
 
 }
@@ -133,6 +135,10 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 func AttackBruteForce(hashalgo string, target string, format string, print bool, layers int) {
 	fmt.Printf("attackmode: brutefoece, algo: %v, target: %v, format: %v, print: %v, layers: %v\n",
 		hashalgo, target, format, print, layers)
+}
+
+func AttackSSH(wordListPath string, ip string, port string, print bool) {
+
 }
 
 // this will print out the finishing attack message

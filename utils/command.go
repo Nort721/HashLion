@@ -25,9 +25,11 @@ type CommandHelp struct{}
 func (c CommandHelp) OnCommand(args []string) {
 	PrintMsg(
 		"\n====================\n" +
-			"exit\n" +
-			"attack -dictionary/d <wordlist> <hashalgo> <target> -print/p <layers(def:1)>\n" +
-			"attack -brutefoce/b <format> <hashalgo> <target> -print/p <layers(def:1)>\n" +
+			" - attack/a -dictionary/d <wordlist> <hashalgo> <target> -print/p <layers(def:1)>\n" +
+			" - attack/a -brutefoce/b <format> <hashalgo> <target> -print/p <layers(def:1)>\n" +
+			" - attackssh/assh <wordlist> <host:port> -print/p\n" +
+			" - hash <hashalgo> <string>\n" +
+			" - exit\n" +
 			"====================\n")
 }
 
@@ -39,7 +41,8 @@ type CommandExit struct{}
 
 // impleneting the func that the interface demands
 func (c CommandExit) OnCommand(args []string) {
-	os.Exit(3)
+	PrintMsg("exiting . . .")
+	os.Exit(1)
 }
 
 //---
@@ -53,6 +56,11 @@ type CommandAttack struct{}
 
 // impleneting the func that the interface demands
 func (c CommandAttack) OnCommand(args []string) {
+
+	if len(args) == 1 {
+		PrintMsg("Incorrect args length, Type help for help.\n")
+		return
+	}
 
 	attackMode := args[1]
 
@@ -94,8 +102,70 @@ func (c CommandAttack) OnCommand(args []string) {
 
 			AttackBruteForce(hashalgo, target, format, print, layers)
 
+		} else {
+			PrintMsg("Incorrect syntax, attack mode " + attackMode + " doesn't exist")
 		}
 
+	} else {
+		PrintMsg("Incorrect args length, Type help for help.\n")
+	}
+}
+
+//---
+
+// attackssh command
+//                        0         1          2         3
+// syntax dictionary: attackssh <wordlist> <ip:port> -print/p
+//---
+type CommandAttackSSH struct{}
+
+// impleneting the func that the interface demands
+func (c CommandAttackSSH) OnCommand(args []string) {
+
+	if len(args) == 4 {
+
+		wordListPath := args[1]
+
+		// if the user didn't write .txt at the end, we will just add it our self
+		if !strings.Contains(wordListPath, ".txt") {
+			wordListPath += ".txt"
+		}
+
+		address := args[2]
+
+		ip := address
+
+		port := address
+
+		print := (strings.Contains(args[3], "p"))
+
+		AttackSSH(wordListPath, ip, port, print)
+
+	} else {
+		PrintMsg("Incorrect args length, Type help for help.\n")
+	}
+}
+
+//---
+
+// hash command
+//                     0        1         2
+// syntax dictionary: hash <hashalgo> <string>
+//---
+type CommandHash struct{}
+
+// impleneting the func that the interface demands
+func (c CommandHash) OnCommand(args []string) {
+
+	if len(args) == 3 {
+
+		hashalgo := args[1]
+
+		str := args[2]
+
+		PrintMsg("Hashed(" + str + "): " + GenerateHash(str, hashalgo) + "\n")
+	} else {
+		PrintMsg("Incorrect args length, Type help for help.\n")
 	}
 }
 
