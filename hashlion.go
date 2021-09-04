@@ -13,7 +13,7 @@ func main() {
 	// fixed os.open issue when copy-pasting file locations on unix based systems
 	// added bcrypt
 
-	const version string = "Build 2 Alpha"
+	const version string = "Build 3 Alpha"
 	const program_name string = "HashLion"
 
 	//consoleutil.SetConsoleTitle(program_name + " " + version)
