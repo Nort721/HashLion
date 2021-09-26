@@ -10,6 +10,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// ToDo make this system based on some sort of map to make it more dynamic
+
 // generates the sha1 hash of a given string
 func GenerateSha1(text string) string {
 	hash := sha1.Sum([]byte(text))
@@ -19,6 +21,15 @@ func GenerateSha1(text string) string {
 // generates the sha256 hash of a given string
 func GenerateSha256(text string) string {
 	hasher := sha256.New()
+
+	hasher.Write([]byte(text))
+
+	return hex.EncodeToString(hasher.Sum(nil))
+}
+
+// generates the sha384 hash of a given string
+func GenerateSha384(text string) string {
+	hasher := sha512.New384()
 
 	hasher.Write([]byte(text))
 
@@ -52,6 +63,8 @@ func GenerateHash(str string, hashalgo string) string {
 		return GenerateSha1(str)
 	case "sha256":
 		return GenerateSha256(str)
+	case "sha384":
+		return GenerateSha384(str)
 	case "sha512":
 		return GenerateSha512(str)
 	case "md5":

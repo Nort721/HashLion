@@ -124,6 +124,25 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 			}
 		}
 
+	} else if hashalgo == "sha384" {
+
+		for _, line := range lines {
+
+			counter++
+
+			testHash = GenerateSha384(line)
+
+			if print {
+				fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
+			}
+
+			if testHash == target {
+				finishAttack(startDate, target, line, counter)
+				cracked = true
+				break
+			}
+		}
+
 	}
 
 	if !cracked {
