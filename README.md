@@ -9,6 +9,7 @@ repository and open it in vscode, then run in the vscode terminal the ```go buil
 in both cases you'll end up with an executable file that you can just double click to start
 
 ## Usage
+Note, these usage instructions are only correct for build 2 pre-release, will be updating this instructions in the future, if you are downloading a newer version for now try understanding the usage with the help command
 ### Step 1 (providing a dictionary)
 After double clicking the file you'll get a command prompt window asking you to enter
 the path to your words file, the words list must be a .txt file
@@ -94,11 +95,9 @@ amount of attempts
 These are some features that will be coming in the future as the project progresses
 you can also feel free to contirbute and help adding these
 
-- New attack option BruteForce
+- New attack option BruteForce, tries every possible password combination of gives max password size and character sets
 
 - Option to use Goroutines to go through the dictionary faster by splitting the dictionary and letting each routine go through one of the parts at the same time
 
 - Support more hashing algorithms
-
-- Add a config file where you can configure the input questions automatically instead of answering them everytime that you open the program
 
