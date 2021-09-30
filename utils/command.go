@@ -31,14 +31,6 @@ func (c CommandHelp) OnCommand(args []string) {
 			" - attackssh/assh <wordlist> <host:port> -print/p\n" +
 			" - hash <hashalgo> <string>\n" +
 			" - exit\n" +
-			"\n" +
-			"Supported hashes:\n" +
-			" - md5\n" +
-			" - sha1\n" +
-			" - sha256\n" +
-			" - sha384\n" +
-			" - sha512\n" +
-			" - bcrypt\n" +
 			"====================\n")
 }
 
