@@ -38,6 +38,16 @@ func (gen HashSha256) Hash(text string) string {
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
+type HashSha384 struct{}
+
+func (gen HashSha384) Hash(text string) string {
+	hasher := sha512.New384()
+
+	hasher.Write([]byte(text))
+
+	return hex.EncodeToString(hasher.Sum(nil))
+}
+
 type HashSha512 struct{}
 
 func (gen HashSha512) Hash(text string) string {

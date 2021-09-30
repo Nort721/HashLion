@@ -15,6 +15,7 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 
 	hashes["sha1"] = generator.HashSha1{}
 	hashes["sha256"] = generator.HashSha256{}
+	hashes["sha384"] = generator.HashSha384{}
 	hashes["sha512"] = generator.HashSha512{}
 	hashes["md5"] = generator.HashMd5{}
 	hashes["bcrypt"] = generator.HashBcrypt{}
