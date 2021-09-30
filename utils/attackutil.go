@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	generator "hashlion/types"
 	"strconv"
 	"time"
 )
@@ -35,7 +36,7 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 
 			counter++
 
-			testHash = GenerateSha1(line)
+			testHash = generator.GenerateSha1(line)
 
 			if print {
 				fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
@@ -54,7 +55,7 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 
 			counter++
 
-			testHash = GenerateSha256(line)
+			testHash = generator.GenerateSha256(line)
 
 			if print {
 				fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
@@ -73,7 +74,7 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 
 			counter++
 
-			testHash = GenerateSha512(line)
+			testHash = generator.GenerateSha512(line)
 
 			if print {
 				fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
@@ -92,7 +93,7 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 
 			counter++
 
-			testHash = GenerateMD5(line)
+			testHash = generator.GenerateMD5(line)
 
 			if print {
 				fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
@@ -111,7 +112,7 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 
 			counter++
 
-			testHash = GenerateBcrypt(line)
+			testHash = generator.GenerateBcrypt(line)
 
 			if print {
 				fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
@@ -130,7 +131,7 @@ func AttackDictionary(hashalgo string, target string, wordListPath string, print
 
 			counter++
 
-			testHash = GenerateSha384(line)
+			testHash = generator.GenerateSha384(line)
 
 			if print {
 				fmt.Printf("trying -> %v : %v | %v\n", testHash, line, strconv.Itoa(counter))
